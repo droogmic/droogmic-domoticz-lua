@@ -37,17 +37,17 @@ m1 = t1.min + t1.hour * 60
 if (false) then
 	if (uservariables['TimeBlindTest'] < -3000)  then
 		m1 = timeofday['SunriseInMinutes'] + uservariables['TimeBlindTest'] + 4000
-		commandArray[1]={['Variable:TimeBlindTest']='0'}
+		commandArray[100]={['Variable:TimeBlindTest']='0'}
 		print('Testing mode ' .. m1)
 	end
 	if (uservariables['TimeBlindTest'] > -3000) and (uservariables['TimeBlindTest'] < 0) then
 		m1 = timeofday['SunsetInMinutes'] + uservariables['TimeBlindTest'] + 2000
-		commandArray[1]={['Variable:TimeBlindTest']='0'}
+		commandArray[100]={['Variable:TimeBlindTest']='0'}
 		print('Testing mode ' .. m1)
 	end
 	if (uservariables['TimeBlindTest'] > 0) then
 		m1 = uservariables['TimeBlindTest']
-		commandArray[1]={['Variable:TimeBlindTest']='0'}
+		commandArray[100]={['Variable:TimeBlindTest']='0'}
 		print('Testing mode ' .. m1)
 	end
 end
@@ -69,41 +69,56 @@ if (true) then
 
 		--8:20am
 		if (m1 == 500) then
-			commandArray[2]={['Blind Group1']='Off'}
-			commandArray[3]={['Blind Group1']='Stop AFTER 3'}
 		end
 
-		--Sunrise + 30 if after 8:20am otherwise 8:40am
-		if (((m1 == timeofday['SunriseInMinutes'] + 30) and (m1 > 500)) or ((m1 == 520) and (timeofday['SunriseInMinutes'] + 30 <= 500))) then
-			commandArray[2]={['Blind Group2']='Off'}
-			commandArray[3]={['Blind Group3']='Stop'}
+		--Sunrise + 20 if after 8:40am(520) otherwise 8:40am
+		if (((m1 == timeofday['SunriseInMinutes'] + 20) and (m1 > 520)) or ((m1 == 520) and (timeofday['SunriseInMinutes'] + 20 <= 500))) then
+			commandArray[11]={['Blind Group1']='Stop'}
+			commandArray[21]={['Blind Group2']='Stop'}
 		end
 
+		--Sunrise + 30
 		if (m1 == timeofday['SunriseInMinutes'] + 30) then
 		end
 
-		--Sunrise + 60 if after 8:40am otherwise 9:00am
-		if (((m1 == timeofday['SunriseInMinutes'] + 60) and (m1 > 520)) or ((m1 == 540) and (timeofday['SunriseInMinutes'] + 30 <= 520))) then
-			--commandArray[2]={['Blind Group3']='Off'}
-			--commandArray[3]={['Blind Group3']='Stop AFTER 3'}
+		--Sunrise + 40 if after 9:00am(540) otherwise 9:00am
+		if (((m1 == timeofday['SunriseInMinutes'] + 40) and (m1 > 540)) or ((m1 == 540) and (timeofday['SunriseInMinutes'] + 40 <= 540))) then
+			commandArray[12]={['Blind Group1']='Off'}
+			commandArray[13]={['Blind Group1']='Stop AFTER 3'}
+			commandArray[22]={['Blind Group2']='Off'}
+			commandArray[31]={['Blind Group3']='Stop'}
+			commandArray[41]={['Blind Group4']='Stop'}
 		end
+
+		----
+		--Sunset - 60
 		if (m1 == timeofday['SunsetInMinutes'] - 60) then
 			--commandArray[2]={['Blind Group3']='Stop'}
 		end
+
+		--Sunset - 30
 		if (m1 == timeofday['SunsetInMinutes'] - 30) then
 		end
+
+		--Sunset
 		if (m1 == timeofday['SunsetInMinutes'] + 0) then
-			commandArray[2]={['Blind Group2']='Stop'}
-			commandArray[3]={['Blind Group2']='Off AFTER 52'}
-			commandArray[4]={['Blind Group2']='Stop AFTER 55'}
-			commandArray[5]={['Blind Group3']='On'}
+			commandArray[21]={['Blind Group2']='Stop'}
+			commandArray[22]={['Blind Group2']='Off AFTER 52'}
+			commandArray[23]={['Blind Group2']='Stop AFTER 55'}
+			commandArray[31]={['Blind Group3']='On'}
 		end
+
+		--Sunset + 30
 		if (m1 == timeofday['SunsetInMinutes'] + 30) then
-			commandArray[2]={['Blind Group1']='Stop'}
+			commandArray[11]={['Blind Group1']='Stop'}
 		end
+
+		--Sunset + 60
 		if (m1 == timeofday['SunsetInMinutes'] + 60) then
-			commandArray[2]={['Blind Group1']='On'}
+			commandArray[12]={['Blind Group1']='On'}
+			commandArray[41]={['Blind Group4']='On'}
 		end
+
 		if (#commandArray>0) then
 			print('Lua Script - TimeBlinds')
 			print('Blinds Activated: m1 = ' .. m1)
@@ -111,8 +126,41 @@ if (true) then
 	end
 end
 
---Checks if 10 minutes
+-- Solarblind
 if (true) then
+	-- print('power')
+	-- print(otherdevices_svalues['Solar W'])
+	-- print(otherdevices_svalues['Solar kWh'])
+	-- print('midday')
+	-- print(midday)
+	if (otherdevices['Solarblind'] == 'On') then
+		power = tonumber(otherdevices_svalues['Solar W'])
+		if (otherdevices['Blind GroupSolarProtect'] ~= 'Stop') then
+			midday = math.floor((timeofday['SunriseInMinutes']+timeofday['SunsetInMinutes'])/2)
+			if ((power > 1000) or (power == 0 and m1 == midday)) then
+				commandArray[101]={['Blind GroupSolarProtect']='On'}
+				file = io.open("device_time.log", "a+")
+				io.output(file)
+				io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tClose\nPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
+				io.close(file)
+			end
+		end
+		if ((power < 500 and power > 0) or (power == 0 and m1 == timeofday['SunsetInMinutes'] - 120)) then
+			if (otherdevices['Blind GroupSolarProtect'] == 'On') then
+				commandArray[102]={['Blind GroupSolarProtect']='Off'}
+				commandArray[103]={['Blind GroupSolarProtect']='Stop AFTER 3'}
+				file = io.open("device_time.log", "a+")
+				io.output(file)
+				io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tOpen\nPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
+				io.close(file)
+			end
+		end
+	end
+end
+
+--Power measurement
+if (true) then
+	--Checks if 10 minutes
 	if (m1 % 5 == 0) then
 
 		http = require('socket.http')
@@ -147,36 +195,37 @@ if (true) then
 			power = obj[1].Body.Data.PAC.Values["1"]
 			energy = obj[1].Body.Data.TOTAL_ENERGY.Values["1"]
 
-			commandArray[10] = {['UpdateDevice'] = "55|0|"..power..";".. energy}
-			commandArray[11] = {['UpdateDevice'] = "56|0|"..power}
+			commandArray[110] = {['UpdateDevice'] = "55|0|"..power..";".. energy}
+			commandArray[111] = {['UpdateDevice'] = "56|0|"..power}
 
 			if (otherdevices['Solarblind'] == 'On') then
-				temp = otherdevices_temperature['Living Room']
-				if (temp < 18) then
-					if (otherdevices['Blind GroupSolar'] ~= 'Stop') then
-						midday = (timeofday['SunriseInMinutes']+timeofday['SunsetInMinutes'])/2
-						if ((power > 2500) or (power == 0 and((m1 - midday)<1 and (m1 - midday)>0))) then
-							commandArray[12]={['Blind GroupSolar']='Off'}
-							commandArray[13]={['Blind GroupSolar']='Stop AFTER 3'}
+				if (false) then
+					temp = otherdevices_temperature['Living Room']
+					if (temp < 18) then
+						if (otherdevices['Blind GroupSolar'] ~= 'Stop') then
+							midday = (timeofday['SunriseInMinutes']+timeofday['SunsetInMinutes'])/2
+							if ((power > 2500) or (power == 0 and((m1 - midday)<1 and (m1 - midday)>0))) then
+								commandArray[112]={['Blind GroupSolar']='Off'}
+								commandArray[113]={['Blind GroupSolar']='Stop AFTER 3'}
+								file = io.open("device_time.log", "a+")
+								io.output(file)
+								io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tUP\nTemp: ' .. temp .. '\tPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
+								io.close(file)
+							end
+						end
+					end
+					if ((power < 1500 and power > 0) or (power == 0 and m1 == timeofday['SunsetInMinutes'] - 120)) then
+						if (otherdevices['Blind GroupSolar'] == 'Stop') then
+							commandArray[114]={['Blind GroupSolar']='On'}
 							file = io.open("device_time.log", "a+")
 							io.output(file)
-							io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tUP\nTemp: ' .. temp .. '\tPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
+							io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tDOWN\nTemp: ' .. temp .. '\tPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
 							io.close(file)
 						end
 					end
 				end
-				if ((power < 1500 and power > 0) or (power == 0 and m1 == timeofday['SunsetInMinutes'] - 120)) then
-					if (otherdevices['Blind GroupSolar'] == 'Stop') then
-						commandArray[14]={['Blind GroupSolar']='On'}
-						file = io.open("device_time.log", "a+")
-						io.output(file)
-						io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tDOWN\nTemp: ' .. temp .. '\tPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
-						io.close(file)
-					end
-				end
 			end
 		end
-
 	end
 end
 

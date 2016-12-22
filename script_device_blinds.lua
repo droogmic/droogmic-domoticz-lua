@@ -53,12 +53,13 @@ blindslaves = {
 	--Group3 = privacy
 	--Group4 =
 	--GroupSolar
-	['Blind Group1']={'Blind Group2', 'Blind Stairs', 'Blind Office'},
-	['Blind Group2']={'Blind Entry'},
-	['Blind Group3']={'Blind Munich', 'Blind Chicago', 'Blind Bath', 'Blind WC'},
-	['Blind Group4']={'Blind Sejour', 'Blind Dining'},
+	['Blind Group1']={'Blind Stairs', 'Blind Entry'},
+	['Blind Group2']={'Blind Office'},
+	['Blind Group3']={'Blind Bath', 'Blind WC'},
+	['Blind Group4']={'Blind Sejour Main', 'Blind Dining'},
 
-	['Blind GroupSolar']={'Blind Dining Main'}
+	['Blind GroupSolar']={'Blind Dining Main'},
+	['Blind GroupSolarProtect']={'Blind Sejour Main'}
 }
 
 for cdevice, cvalue in pairs(devicechanged) do
