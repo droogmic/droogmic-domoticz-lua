@@ -64,24 +64,24 @@ if (true) then
 
 		--8am
 		if (m1 == 480) then
-			commandArray[2]={['Blind Group1']='Stop'}
+			-- commandArray[2]={['Blind Group1']='Stop'}
 		end
 
 		--8:20am
 		if (m1 == 500) then
 		end
 
-		--Sunrise + 20 if after 8:40am(520) otherwise 8:40am
+		--Sunrise +20 if after 8:40am(520) otherwise 8:40am
 		if (((m1 == timeofday['SunriseInMinutes'] + 20) and (m1 > 520)) or ((m1 == 520) and (timeofday['SunriseInMinutes'] + 20 <= 500))) then
 			commandArray[11]={['Blind Group1']='Stop'}
 			commandArray[21]={['Blind Group2']='Stop'}
 		end
 
-		--Sunrise + 30
+		--Sunrise+30
 		if (m1 == timeofday['SunriseInMinutes'] + 30) then
 		end
 
-		--Sunrise + 40 if after 9:00am(540) otherwise 9:00am
+		--Sunrise+40 if after 9:00am(540) otherwise 9:00am
 		if (((m1 == timeofday['SunriseInMinutes'] + 40) and (m1 > 540)) or ((m1 == 540) and (timeofday['SunriseInMinutes'] + 40 <= 540))) then
 			commandArray[12]={['Blind Group1']='Off'}
 			commandArray[13]={['Blind Group1']='Stop AFTER 3'}
@@ -91,30 +91,30 @@ if (true) then
 		end
 
 		----
-		--Sunset - 60
+		--Sunset-60
 		if (m1 == timeofday['SunsetInMinutes'] - 60) then
 			--commandArray[2]={['Blind Group3']='Stop'}
 		end
 
-		--Sunset - 30
+		--Sunset-30
 		if (m1 == timeofday['SunsetInMinutes'] - 30) then
 		end
 
 		--Sunset
 		if (m1 == timeofday['SunsetInMinutes'] + 0) then
 			commandArray[21]={['Blind Group2']='Stop'}
-			commandArray[22]={['Blind Group2']='Off AFTER 52'}
-			commandArray[23]={['Blind Group2']='Stop AFTER 55'}
+			commandArray[22]={['Blind Group2']='Off AFTER 42'}
+			commandArray[23]={['Blind Group2']='Stop AFTER 45'}
 			commandArray[31]={['Blind Group3']='On'}
 		end
 
-		--Sunset + 30
-		if (m1 == timeofday['SunsetInMinutes'] + 30) then
+		--Sunset+60
+		if (m1 == timeofday['SunsetInMinutes'] + 60) then
 			commandArray[11]={['Blind Group1']='Stop'}
 		end
 
-		--Sunset + 60
-		if (m1 == timeofday['SunsetInMinutes'] + 60) then
+		--Sunset+120
+		if (m1 == timeofday['SunsetInMinutes'] + 120) then
 			commandArray[12]={['Blind Group1']='On'}
 			commandArray[41]={['Blind Group4']='On'}
 		end
@@ -173,9 +173,9 @@ if (true) then
 		t = {}
 		req_body = ''
 		local headers = {
-	            ["Content-Type"] = "application/json";
-	            ["Content-Length"] = #req_body;
-			}
+            ["Content-Type"] = "application/json";
+            ["Content-Length"] = #req_body;
+		}
 		client, code, headers, status = http.request{url=base_url, headers=headers, source=ltn12.source.string(req_body), sink = ltn12.sink.table(t), method='GET'}
 
 		--Check if page exists
@@ -198,8 +198,8 @@ if (true) then
 			commandArray[110] = {['UpdateDevice'] = "55|0|"..power..";".. energy}
 			commandArray[111] = {['UpdateDevice'] = "56|0|"..power}
 
-			if (otherdevices['Solarblind'] == 'On') then
-				if (false) then
+			if (false) then
+				if (otherdevices['Solarblind'] == 'On') then
 					temp = otherdevices_temperature['Living Room']
 					if (temp < 18) then
 						if (otherdevices['Blind GroupSolar'] ~= 'Stop') then
