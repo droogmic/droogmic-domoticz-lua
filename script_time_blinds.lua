@@ -103,14 +103,20 @@ if (true) then
 		--Sunset
 		if (m1 == timeofday['SunsetInMinutes'] + 0) then
 			commandArray[21]={['Blind Group2']='Stop'}
-			commandArray[22]={['Blind Group2']='Off AFTER 42'}
-			commandArray[23]={['Blind Group2']='Stop AFTER 45'}
+			commandArray[22]={['Blind Group2']='Off AFTER 50'}
+			commandArray[23]={['Blind Group2']='Stop AFTER 55'}
 			commandArray[31]={['Blind Group3']='On'}
+		end
+
+		--Sunset+30
+		if (m1 == timeofday['SunsetInMinutes'] + 30) then
+			commandArray[24]={['Blind Group2']='Stop'}
 		end
 
 		--Sunset+60
 		if (m1 == timeofday['SunsetInMinutes'] + 60) then
 			commandArray[11]={['Blind Group1']='Stop'}
+			commandArray[25]={['Blind Group2']='On'}
 		end
 
 		--Sunset+120
