@@ -133,25 +133,30 @@ if (true) then
 	-- print(otherdevices_svalues['Solar kWh'])
 	-- print('midday')
 	-- print(midday)
-	if (otherdevices['Solarblind'] == 'On') then
+	if (otherdevices['Solarblind'] == 'On' and otherdevices['Autoblind'] == 'On') then
 		power = tonumber(otherdevices_svalues['Solar W'])
-		if (otherdevices['Blind GroupSolarProtect'] ~= 'Stop') then
+		if ( uservariables["SolarProtectStatus"] ~= "On" and uservariables["SolarProtectStatus"] ~= "Off" ) then
+ 			commandArray[101] = {['Variable:SolarProtectStatus']='Off'}
+		end
+		if (uservariables["SolarProtectStatus"] == 'Off') then
 			midday = math.floor((timeofday['SunriseInMinutes']+timeofday['SunsetInMinutes'])/2)
 			if ((power > 1000) or (power == 0 and m1 == midday)) then
-				commandArray[101]={['Blind GroupSolarProtect']='On'}
+				commandArray[102] = {['Variable:SolarProtectStatus']='On'}
+				commandArray[103]={['Blind GroupSolarProtect']='Stop'}
 				file = io.open("device_time.log", "a+")
 				io.output(file)
-				io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tClose\nPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
+				io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tOn\nPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
 				io.close(file)
 			end
 		end
-		if ((power < 500 and power > 0) or (power == 0 and m1 == timeofday['SunsetInMinutes'] - 120)) then
-			if (otherdevices['Blind GroupSolarProtect'] == 'On') then
-				commandArray[102]={['Blind GroupSolarProtect']='Off'}
-				commandArray[103]={['Blind GroupSolarProtect']='Stop AFTER 3'}
+		if (uservariables["SolarProtectStatus"] == 'On') then
+			if ((power < 500 and power > 0) or (power == 0 and m1 == timeofday['SunsetInMinutes'] - 120)) then
+				commandArray[104] = {['Variable:SolarProtectStatus']='Off'}
+				commandArray[105]={['Blind GroupSolarProtect']='Off'}
+				commandArray[106]={['Blind GroupSolarProtect']='Stop AFTER 3'}
 				file = io.open("device_time.log", "a+")
 				io.output(file)
-				io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tOpen\nPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
+				io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tOff\nPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
 				io.close(file)
 			end
 		end
