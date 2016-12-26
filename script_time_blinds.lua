@@ -87,7 +87,9 @@ if (true) then
 			commandArray[13]={['Blind Group1']='Stop AFTER 3'}
 			commandArray[22]={['Blind Group2']='Off'}
 			commandArray[31]={['Blind Group3']='Stop'}
-			commandArray[41]={['Blind Group4']='Stop'}
+			commandArray[41]={['Blind Group4']='On'}
+			commandArray[42]={['Blind Group4']='Off AFTER 4'}
+			commandArray[43]={['Blind Group4']='Stop AFTER 7'}
 		end
 
 		----
@@ -148,7 +150,7 @@ if (true) then
 			midday = math.floor((timeofday['SunriseInMinutes']+timeofday['SunsetInMinutes'])/2)
 			if ((power > 1000) or (power == 0 and m1 == midday)) then
 				commandArray[102] = {['Variable:SolarProtectStatus']='On'}
-				commandArray[103]={['Blind GroupSolarProtect']='Stop'}
+				commandArray[104]={['Blind GroupSolarProtect']='Stop'}
 				file = io.open("device_time.log", "a+")
 				io.output(file)
 				io.write(os.date('%F %T') .. '\t' .. m1 .. '  \tOn\nPower: ' ..  power .. '\tSunrise+Sunset times: ' .. timeofday['SunriseInMinutes'] .. ' ' .. timeofday['SunsetInMinutes'] .. '\n\n')
@@ -157,7 +159,7 @@ if (true) then
 		end
 		if (uservariables["SolarProtectStatus"] == 'On') then
 			if ((power < 500 and power > 0) or (power == 0 and m1 == timeofday['SunsetInMinutes'] - 120)) then
-				commandArray[104] = {['Variable:SolarProtectStatus']='Off'}
+				commandArray[103] = {['Variable:SolarProtectStatus']='Off'}
 				commandArray[105]={['Blind GroupSolarProtect']='Off'}
 				commandArray[106]={['Blind GroupSolarProtect']='Stop AFTER 3'}
 				file = io.open("device_time.log", "a+")
