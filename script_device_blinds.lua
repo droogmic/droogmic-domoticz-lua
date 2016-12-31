@@ -54,9 +54,8 @@ blindslaves = {
 	--Group4 =
 	--GroupSolar
 	['Blind Group1']={'Blind Stairs', 'Blind Entry'},
-	['Blind Group2']={'Blind Office'},
-	['Blind Group3']={'Blind Bath', 'Blind WC'},
-	['Blind Group4']={'Blind Sejour Main', 'Blind Dining'},
+	['Blind Group2']={'Blind Bath', 'Blind WC'},
+	['Blind Group3']={'Blind Sejour Main', 'Blind Dining'},
 
 	['Blind GroupSolar']={'Blind Dining Main'},
 	['Blind GroupSolarProtect']={'Blind Sejour Main'}

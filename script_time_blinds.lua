@@ -63,68 +63,78 @@ if (true) then
 	if (otherdevices['Autoblind'] == 'On') then
 
 		--8am
-		if (m1 == 480) then
-			-- commandArray[2]={['Blind Group1']='Stop'}
-		end
+		--if (m1 == 480) then
+		--end
 
 		--8:20am
-		if (m1 == 500) then
-		end
+		--if (m1 == 500) then
+		--end
 
 		--Sunrise +20 if after 8:40am(520) otherwise 8:40am
-		if (((m1 == timeofday['SunriseInMinutes'] + 20) and (m1 > 520)) or ((m1 == 520) and (timeofday['SunriseInMinutes'] + 20 <= 500))) then
+		--if (((m1 == timeofday['SunriseInMinutes'] + 20) and (m1 > 520)) or ((m1 == 520) and (timeofday['SunriseInMinutes'] + 20 <= 500))) then
+
+		--8:40am
+		if (m1 == 520) then
 			commandArray[11]={['Blind Group1']='Stop'}
-			commandArray[21]={['Blind Group2']='Stop'}
+			commandArray[21]={['Blind Office']='Stop'}
 		end
 
 		--Sunrise+30
-		if (m1 == timeofday['SunriseInMinutes'] + 30) then
-		end
+		--if (m1 == timeofday['SunriseInMinutes'] + 30) then
+		--end
 
 		--Sunrise+40 if after 9:00am(540) otherwise 9:00am
-		if (((m1 == timeofday['SunriseInMinutes'] + 40) and (m1 > 540)) or ((m1 == 540) and (timeofday['SunriseInMinutes'] + 40 <= 540))) then
+		--if (((m1 == timeofday['SunriseInMinutes'] + 40) and (m1 > 540)) or ((m1 == 540) and (timeofday['SunriseInMinutes'] + 40 <= 540))) then
+
+		--9:00am
+		if (m1 == 540) then
 			commandArray[12]={['Blind Group1']='Off'}
 			commandArray[13]={['Blind Group1']='Stop AFTER 3'}
-			commandArray[22]={['Blind Group2']='Off'}
-			commandArray[31]={['Blind Group3']='Stop'}
-			commandArray[41]={['Blind Group4']='On'}
-			commandArray[42]={['Blind Group4']='Off AFTER 4'}
-			commandArray[43]={['Blind Group4']='Stop AFTER 7'}
+			commandArray[22]={['Blind Office']='Off'}
+			commandArray[31]={['Blind Group2']='Stop'}
+			commandArray[41]={['Blind Group3']='On'}
+			commandArray[42]={['Blind Group3']='Stop AFTER 4'}
+		end
+		if (m1 == 541) then
+			commandArray[43]={['Blind Group3']='Off'}
+			commandArray[44]={['Blind Group3']='Stop AFTER 3'}
 		end
 
 		----
+
 		--Sunset-60
-		if (m1 == timeofday['SunsetInMinutes'] - 60) then
-			--commandArray[2]={['Blind Group3']='Stop'}
-		end
+		--if (m1 == timeofday['SunsetInMinutes'] - 60) then
+		--end
 
 		--Sunset-30
-		if (m1 == timeofday['SunsetInMinutes'] - 30) then
-		end
+		--if (m1 == timeofday['SunsetInMinutes'] - 30) then
+		--end
 
 		--Sunset
 		if (m1 == timeofday['SunsetInMinutes'] + 0) then
-			commandArray[21]={['Blind Group2']='Stop'}
-			commandArray[22]={['Blind Group2']='Off AFTER 50'}
-			commandArray[23]={['Blind Group2']='Stop AFTER 55'}
-			commandArray[31]={['Blind Group3']='On'}
+			commandArray[21]={['Blind Office']='Stop'}
+			commandArray[31]={['Blind Group2']='On'}
+		end
+		if (m1 == timeofday['SunsetInMinutes'] + 1) then
+			commandArray[22]={['Blind Office']='Off'}
+			commandArray[23]={['Blind Office']='Stop AFTER 4'}
 		end
 
 		--Sunset+30
 		if (m1 == timeofday['SunsetInMinutes'] + 30) then
-			commandArray[24]={['Blind Group2']='Stop'}
+			commandArray[24]={['Blind Office']='Stop'}
 		end
 
 		--Sunset+60
 		if (m1 == timeofday['SunsetInMinutes'] + 60) then
 			commandArray[11]={['Blind Group1']='Stop'}
-			commandArray[25]={['Blind Group2']='On'}
+			commandArray[25]={['Blind Office']='On'}
 		end
 
 		--Sunset+120
 		if (m1 == timeofday['SunsetInMinutes'] + 120) then
 			commandArray[12]={['Blind Group1']='On'}
-			commandArray[41]={['Blind Group4']='On'}
+			commandArray[41]={['Blind Group3']='On'}
 		end
 
 		if (#commandArray>0) then
